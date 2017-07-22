@@ -63,17 +63,8 @@ include_directories(${PROJECT_SOURCE_DIR}/baselib/)
 #string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
 message(STATUS "CXX_FLAGS = " ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_${BUILD_TYPE}})
 
-find_package(CURL)
+#find_package(CURL)
 #find_package(OPENSSL)
-
-if(CURL_FOUND)
-  message(STATUS "found curl")
-endif()
-
-if(MYSQL_INCLUDE_DIR AND MYSQL_LIBRARY)
-  message(STATUS "found mysql")
-  message(STATUS ${MYSQL_LIBRARY})
-endif()
 
 if(APPLE)
 elseif(UNIX)
