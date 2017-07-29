@@ -4,15 +4,14 @@
 #include <wangle/bootstrap/ServerBootstrap.h>
 
 #include "net/server/tcp_service_base.h"
-#include "net/im_conn_handler.h"
-#include "net/im_conn_pipeline_factory.h"
+#include "net/conn_handler.h"
+#include "net/conn_pipeline_factory.h"
 #include "net/io_thread_pool_manager.h"
 
 enum NetModuleState {
     kNetModuleState_None = 0,
 };
 
-// ClusterManager
 class TcpServer : public TcpServiceBase {
 public:
     TcpServer(const ServiceConfig& config, const IOThreadPoolExecutorPtr& io_group);
@@ -33,14 +32,14 @@ public:
     }
     
     // EventBase线程里执行
-    uint64_t OnNewConnection(IMConnPipeline* pipeline) override;
+    uint64_t OnNewConnection(ConnPipeline* pipeline) override;
     // EventBase线程里执行
-    bool OnConnectionClosed(uint64_t conn_id, IMConnPipeline* pipeline) override;
+    bool OnConnectionClosed(uint64_t conn_id, ConnPipeline* pipeline) override;
 
 private:
     // IOThreadPoolExecutorPtr io_group_;
     std::shared_ptr<ServerConnPipelineFactory> factory_;
-    wangle::ServerBootstrap<IMConnPipeline> server_;
+    wangle::ServerBootstrap<ConnPipeline> server_;
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -63,37 +62,6 @@ public:
     
 protected:
     IOThreadPoolExecutorPtr io_group_;
-};
-
-// ClusterManager
-class MlsTcpServer : public TcpServiceBase {
-public:
-	MlsTcpServer(const ServiceConfig& config, const IOThreadPoolExecutorPtr& io_group);
-    virtual ~MlsTcpServer() = default;
-
-    void SetChildPipeline(std::shared_ptr<MlsServerConnPipelineFactory> factory) {
-        factory_ = factory;
-    }
-
-    bool Start() override;
-    bool Pause() override;
-    bool Stop() override;
-
-
-    // Impl from TcpServiceBase
-    ServiceModuleType GetModuleType() const override {
-        return ServiceModuleType::TCP_SERVER;
-    }
-
-    // EventBase线程里执行
-    uint64_t OnNewConnection(IMConnPipeline* pipeline) override;
-    // EventBase线程里执行
-    bool OnConnectionClosed(uint64_t conn_id, IMConnPipeline* pipeline) override;
-
-private:
-    // IOThreadPoolExecutorPtr io_group_;
-    std::shared_ptr<MlsServerConnPipelineFactory> factory_;
-    wangle::ServerBootstrap<IMConnPipeline> server_;
 };
 
 #endif

@@ -1,13 +1,3 @@
-/*
- *  Copyright (c) 2016, mogujie.com
- *  All rights reserved.
- *
- *  Created by benqi@mogujie.com on 2016-02-05.
- *
- *  基于：https://github.com/facebook/proxygen/blob/master/proxygen/httpclient/samples/curl/CurlClient.h(cpp)
- *  将CurlClient集成至我们的网络库里
- */
-
 #ifndef NET_SERVER_MOGU_HTTP_CLIENT_H_
 #define NET_SERVER_MOGU_HTTP_CLIENT_H_
 

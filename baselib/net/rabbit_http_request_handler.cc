@@ -1,4 +1,5 @@
 #include "net/rabbit_http_request_handler.h"
+#include "net/fiber_data_manager.h"
 
 #include <proxygen/httpserver/ResponseBuilder.h>
 
@@ -11,7 +12,7 @@ void RabbitHttpRequestHandler::onEOM() noexcept {
     FiberDataManager& fiber_data_manager = GetFiberDataManagerByThreadLocal();
     if (fiber_data_manager.IsInited()) {
         FiberDataManager::IncreaseStats(FiberDataManager::f_add_task);
-        std::shared_ptr<MoguHttpRequestHandler> capture_ptr(this);
+        std::shared_ptr<RabbitHttpRequestHandler> capture_ptr(this);
         self = shared_from_this();
         std::weak_ptr<RabbitHttpRequestHandler> weak_capture_ptr = capture_ptr;
         fiber_data_manager.GetFiberManager()->addTask([this, weak_capture_ptr]() {
@@ -81,6 +82,6 @@ void RabbitHttpRequestHandler::onEOM() noexcept {
 void RabbitHttpRequestHandler::OnHttpHandler(const proxygen::HTTPMessage& headers,
                                            std::unique_ptr<folly::IOBuf> body,
                                            proxygen::ResponseBuilder& r) {
-    RabbitHttpRequestHandler::DispatchMoguHttpHandler(headers, std::move(body), r);
+//    RabbitHttpRequestHandler::DispatchMoguHttpHandler(headers, std::move(body), r);
 
 }

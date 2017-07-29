@@ -14,42 +14,18 @@
 
 //////////////////////////////////////////////////////////////////////////////
 TcpClient::~TcpClient() {
-    // LOG(INFO) << "TcpClient::~TcpClient()";
-    
     if (client_ && client_->getPipeline()) {
         client_->getPipeline()->setPipelineManager(nullptr);
     }
 }
 
 bool TcpClient::Start() {
-    // TODO(@benqi)
-    //  检查factory_,conns_,config_等
-
-    // client_.group(conns_->GetIOThreadPoolExecutor());
     client_->pipelineFactory(factory_);
     auto main_eb = client_->getEventBase();
     main_eb->runImmediatelyOrRunInEventBaseThreadAndWait([this]() {
         DoConnect();
     });
     return true;
-}
-
-// 发心跳包
-void TcpClient::DoHeartBeat(bool is_send) {
-    if (connected_.load()) {
-        if (is_send) {
-            impdu::CImPduHeartBeat heart_beat;
-            auto buf = folly::IOBuf::create(heart_beat.GetByteSize());
-            buf->append(heart_beat.GetByteSize());
-            heart_beat.SerializeToIOBuf(buf.get());
-            this->client_->getPipeline()->write(std::move(buf));
-        }
-
-        auto main_eb = client_->getEventBase();
-        main_eb->runAfterDelay([&] {
-            this->DoHeartBeat(true);
-        }, HEARTBEAT_TIMEOUT);
-    }
 }
 
 bool TcpClient::Pause() {
@@ -77,8 +53,6 @@ void TcpClient::DoConnect(int timeout) {
         LOG(INFO) << "TcpClient - Connect sucess: " << config_.ToString();
         pipeline->setPipelineManager(this);
         this->connected_.store(true);
-        
-        DoHeartBeat(false);
     })
     .onError([this, timeout](const std::exception& ex) {
         LOG(ERROR) << "TcpClient - Error connecting to : "

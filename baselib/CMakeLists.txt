@@ -62,6 +62,10 @@ set (BASELIB_SRC_LIST
         net/simple_conn_pipeline_factory.h
         net/thread_local_conn_manager.cc
         net/thread_local_conn_manager.h
+        net/conn_pipeline_factory.cc
+        net/conn_pipeline_factory.h
+        net/conn_handler.cc
+        net/conn_handler.h
         )
 
 add_library (baselib ${BASELIB_SRC_LIST})

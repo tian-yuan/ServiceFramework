@@ -1,6 +1,7 @@
 #ifndef NET_SERVER_TCP_CLIENT_H_
 #define NET_SERVER_TCP_CLIENT_H_
 
+#include "net/conn_pipeline_factory.h"
 #include "net/server/tcp_service_base.h"
 #include "net/base/client_bootstrap2.h"
 
@@ -55,16 +56,15 @@ public:
     bool SendIOBufThreadSafe(std::unique_ptr<folly::IOBuf> data, const std::function<void()>& c);
 
     // EventBase线程里执行
-    uint64_t OnNewConnection(IMConnPipeline* pipeline) override;
+    uint64_t OnNewConnection(ConnPipeline* pipeline) override;
     // EventBase线程里执行
-    bool OnConnectionClosed(uint64_t conn_id, IMConnPipeline* pipeline) override;
+    bool OnConnectionClosed(uint64_t conn_id, ConnPipeline* pipeline) override;
 
     bool connected() {
         return connected_.load();
     }
 
 private:
-    void DoHeartBeat(bool is_send);
     void DoConnect(int timeout = 0);
     
     // std::shared_ptr<IOThreadPoolConnManager> conns_;
@@ -72,7 +72,7 @@ private:
     // folly::EventBase* base_ = nullptr;
     // IOThreadConnManager* conn_{nullptr};
     std::shared_ptr<ClientConnPipelineFactory> factory_;
-    std::shared_ptr<wangle::ClientBootstrap2<IMConnPipeline>> client_;
+    std::shared_ptr<wangle::ClientBootstrap2<ConnPipeline>> client_;
     std::atomic<bool> connected_ {false};
     bool stoped_ {false};
     

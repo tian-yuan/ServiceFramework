@@ -72,16 +72,9 @@ struct Stat {
 
 class Stats {
 public:
-//    Stats() = default;
-//
     explicit Stats(const std::string& v, size_t size) :
         stats_name_(v),
         stats_(size) {}
-    
-//    void Init(const std::string& v, size_t size) {
-//        stats_name_ = v;
-//        stats_.resize(size);
-//    }
     
     void InitStat(size_t idx, const std::string& name) {
         if (idx<stats_.size()) {

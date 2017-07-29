@@ -3,7 +3,7 @@
 #include <folly/io/async/EventBaseManager.h>
 #include <folly/Random.h>
 
-#include "net/im_conn_handler.h"
+#include "net/conn_handler.h"
 #include "net/base/service_base.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ uint32_t IOThreadConnManager::OnNewConnection(ConnPipeline* pipeline) {
     
     // pipelines_[conn_id] = pipeline;
     
-    const std::string& service_name = pipeline->getHandler<IMConnHandler>()->GetServiceBase()->GetServiceName();
+    const std::string& service_name = pipeline->getHandler<ConnHandler>()->GetServiceBase()->GetServiceName();
     auto it = service_pipelines_.find(service_name);
     if (it == service_pipelines_.end()) {
         std::set<uint32_t> tmp;
@@ -112,7 +112,7 @@ bool IOThreadConnManager::OnConnectionClosed(uint32_t conn_id, ConnPipeline* pip
         pipelines_.erase(it);
     }
     
-    const std::string& service_name = pipeline->getHandler<IMConnHandler>()->GetServiceBase()->GetServiceName();
+    const std::string& service_name = pipeline->getHandler<ConnHandler>()->GetServiceBase()->GetServiceName();
     auto it2 = service_pipelines_.find(service_name);
     if (it2 != service_pipelines_.end()) {
         it2->second.erase(conn_id);
