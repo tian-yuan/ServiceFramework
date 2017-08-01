@@ -10,7 +10,7 @@ set(CXX_FLAGS
  -g
  # -DVALGRIND
  # -DCHECK_PTHREAD_RETURN_VALUE
- -D_FILE_OFFSET_BITS=64
+ #-D_FILE_OFFSET_BITS=64
 #-Wall
  -w
  -Wextra
@@ -34,10 +34,6 @@ set(CXX_FLAGS
  # -Wunused-parameter
  )
 
-if(CMAKE_BUILD_BITS EQUAL 32)
-  list(APPEND CXX_FLAGS "-m32")
-endif()
-
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
 
@@ -45,6 +41,7 @@ if(APPLE)
   #set(CMAKE_CXX_COMPILER "g++-4.9")
   #set(CMAKE_CXX_COMPILER "clang++")
   message("APPLE")
+  set(CMAKE_CXX_COMPILER "g++")
 elseif(UNIX)
   set(CMAKE_CXX_COMPILER "g++")
   message("UNIX")
@@ -60,6 +57,8 @@ include_directories("/usr/local/ssl/include/")
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/baselib)
 include_directories(${PROJECT_SOURCE_DIR}/baselib/)
+
+link_directories(/usr/local/ssl/lib /usr/local/lib)
 
 #string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
 message(STATUS "CXX_FLAGS = " ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_${BUILD_TYPE}})

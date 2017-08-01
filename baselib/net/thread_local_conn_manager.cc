@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // EventBase线程里执行
-uint64_t ThreadLocalConnManager::OnNewConnection(IMConnPipeline* pipeline) {
+uint64_t ThreadLocalConnManager::OnNewConnection(ConnPipeline* pipeline) {
     uint32_t conn_id = 0;
     bool sucess = false;
     do {
@@ -21,7 +21,7 @@ uint64_t ThreadLocalConnManager::OnNewConnection(IMConnPipeline* pipeline) {
 }
 
 // EventBase线程里执行
-bool ThreadLocalConnManager::OnConnectionClosed(uint64_t conn_id, IMConnPipeline* pipeline) {
+bool ThreadLocalConnManager::OnConnectionClosed(uint64_t conn_id, ConnPipeline* pipeline) {
     // auto it = pipelines_.find(conn_id & 0xffffffff);
     bool rv = true;
     auto it = pipelines_.find(conn_id & 0xffffffff);

@@ -77,3 +77,4 @@ target_link_libraries (baselib folly boost_context boost_filesystem boost_system
 endif()
 
 add_subdirectory(base/test)
+add_subdirectory(net/test)

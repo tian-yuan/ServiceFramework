@@ -149,7 +149,7 @@ bool IOThreadConnManager::DispatchIOBufByConnID(uint32_t conn_id, std::unique_pt
                 << ", thread_id: " << thread_id_;
 
     auto it = pipelines_.find(conn_id);
-    if (it!=pipelines_.end()) {
+    if (it != pipelines_.end()) {
         it->second->write(std::move(data));
     } else {
         LOG(ERROR) << "DispatchIOBufByConnID - Not find conn_id: " << conn_id

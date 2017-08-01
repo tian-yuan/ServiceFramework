@@ -19,9 +19,6 @@ private:
 
 std::shared_ptr<LogInitializer> GetLogInitializerSingleton();
 
-//#define LOG(L_DEBUG)
-//#define LOG(L_TRACE)
-//#define LOG(L_CRIT)
 namespace glog_util {
     
 extern bool GLOG_trace;

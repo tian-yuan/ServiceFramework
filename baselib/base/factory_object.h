@@ -1,11 +1,3 @@
-/*
- *  Copyright (c) 2015, mogujie.com
- *  All rights reserved.
- *
- *  Created by benqi@mogujie.com on 2016-01-04.
- *
- */
-
 #ifndef BASE_FACTORY_OBJECT_H_
 #define BASE_FACTORY_OBJECT_H_
 

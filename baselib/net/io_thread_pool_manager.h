@@ -47,7 +47,6 @@ public:
     IOThreadConnManager(size_t thread_id, folly::EventBase* event_base) :
         thread_id_(thread_id),
         event_base_(event_base) {
-        // fiber_datas_(event_base, static_cast<uint32_t>(thread_id)) {
     }
     
     // EventBase线程里执行
@@ -69,10 +68,6 @@ public:
         return event_base_;
     }
 
-    // FiberDataManager* GetFiberDataManager() {
-    //    return &fiber_datas_;
-    // }
-
     ConnPipeline* FindPipeline(uint32_t conn_id);
     const std::set<uint32_t>& FindPipelines(const std::string& service) const;
     
@@ -83,13 +78,10 @@ protected:
     
     // 用于计数（可以使用IDMap）
     uint32_t current_conn_id_ = 0;
-    
-    // TODO(@benqi): 使用boost::multi_index_container进行管理
-    //   需要考虑性能，操作比较频繁
+
+    // 需要考虑性能，操作比较频繁
     std::map<uint32_t, ConnPipeline*> pipelines_;
     std::map<std::string, std::set<uint32_t>> service_pipelines_;
-    
-    // FiberDataManager fiber_datas_;
     
     struct ServerConnInfo {
         bool Equals(const std::string& _server_name, uint32_t _server_number) const {
@@ -165,6 +157,5 @@ private:
     
     mutable size_t current_thread_id_{0};
 };
-
 
 #endif

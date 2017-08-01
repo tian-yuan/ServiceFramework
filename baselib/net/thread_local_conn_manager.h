@@ -9,7 +9,7 @@
 #include "net/server/tcp_service_base.h"
 
 // class IMConnPipeline;
-using IMConnPipeline = wangle::Pipeline<folly::IOBufQueue&, std::unique_ptr<folly::IOBuf>>;
+using ConnPipeline = wangle::Pipeline<folly::IOBufQueue&, std::unique_ptr<folly::IOBuf>>;
 
 
 folly::EventBase* GetEventBaseByThreadID(size_t idx);
@@ -39,7 +39,7 @@ public:
     // EventBase线程里执行
     uint64_t OnNewConnection(ConnPipeline* pipeline) override;
     // EventBase线程里执行
-    bool OnConnectionClosed(uint64_t conn_id, IMConnPipeline* pipeline) override;
+    bool OnConnectionClosed(uint64_t conn_id, ConnPipeline* pipeline) override;
     
     ConnPipeline* FindPipeline(uint64_t conn_id);
 

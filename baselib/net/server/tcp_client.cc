@@ -49,7 +49,7 @@ bool TcpClient::Stop() {
 
 void TcpClient::DoConnect(int timeout) {
     client_->connect(conn_address_, std::chrono::milliseconds(timeout))
-    .then([this](IMConnPipeline* pipeline) {
+    .then([this](ConnPipeline* pipeline) {
         LOG(INFO) << "TcpClient - Connect sucess: " << config_.ToString();
         pipeline->setPipelineManager(this);
         this->connected_.store(true);
@@ -86,11 +86,11 @@ void TcpClient::refreshTimeout() {
 //    LOG(INFO) << "refreshTimeout ";
 }
 
-uint64_t TcpClient::OnNewConnection(IMConnPipeline* pipeline) {
+uint64_t TcpClient::OnNewConnection(ConnPipeline* pipeline) {
     return GetConnManagerByThreadLocal().OnNewConnection(pipeline);
 }
 
-bool TcpClient::OnConnectionClosed(uint64_t conn_id, IMConnPipeline* pipeline) {
+bool TcpClient::OnConnectionClosed(uint64_t conn_id, ConnPipeline* pipeline) {
     return GetConnManagerByThreadLocal().OnConnectionClosed(conn_id, pipeline);
 }
 

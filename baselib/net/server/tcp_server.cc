@@ -34,12 +34,12 @@ bool TcpServer::Stop() {
 }
 
 // EventBase线程里执行
-uint64_t TcpServer::OnNewConnection(IMConnPipeline* pipeline) {
+uint64_t TcpServer::OnNewConnection(ConnPipeline* pipeline) {
     return GetConnManagerByThreadLocal().OnNewConnection(pipeline);
 }
 
 // EventBase线程里执行
-bool TcpServer::OnConnectionClosed(uint64_t conn_id, IMConnPipeline* pipeline) {
+bool TcpServer::OnConnectionClosed(uint64_t conn_id, ConnPipeline* pipeline) {
     return GetConnManagerByThreadLocal().OnConnectionClosed(conn_id, pipeline);
 }
 

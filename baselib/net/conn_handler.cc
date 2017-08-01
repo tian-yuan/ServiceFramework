@@ -37,7 +37,7 @@ void ConnHandler::transportActive(Context* ctx) {
     // 缓存连接地址
     remote_address_ = ctx->getPipeline()->getTransportInfo()->remoteAddr->getAddressStr();
     if (service_) {
-        conn_id_ = service_->OnNewConnection(reinterpret_cast<IMConnPipeline*>(ctx->getPipeline()));
+        conn_id_ = service_->OnNewConnection(reinterpret_cast<ConnPipeline*>(ctx->getPipeline()));
     }
 
     LOG(INFO) << "transportActive - conn_id = " << conn_id_
