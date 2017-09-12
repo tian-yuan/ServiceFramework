@@ -2,6 +2,7 @@
 #include "net/conn_pipeline_factory.h"
 
 #include <wangle/channel/EventBaseHandler.h>
+#include <wangle/codec/ByteToMessageDecoder.h>
 
 #include "net/thread_local_conn_manager.h"
 #include "net/conn_handler.h"
@@ -50,13 +51,24 @@ ConnPipeline::Ptr ClientConnPipelineFactory::newPipeline(std::shared_ptr<folly::
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+class SimpleDecode : public wangle::ByteToByteDecoder {
+public:
+    bool decode(Context*,
+                folly::IOBufQueue& buf,
+                std::unique_ptr<folly::IOBuf>& result,
+                size_t&) override {
+        result = buf.move();
+        return result != nullptr;
+    }
+};
+
+///< decode 需要能做到自定义，由外部进行设置
 ConnPipeline::Ptr ServerConnPipelineFactory::newPipeline(std::shared_ptr<folly::AsyncTransportWrapper> sock) {
     VLOG(4)<< "ServerConnPipelineFactory::newPipeline!";
     auto pipeline = ConnPipeline::create();
     pipeline->setReadBufferSettings(1024*32, 1024*64);
     pipeline->addBack(wangle::AsyncSocketHandler(sock));
-//    pipeline->addBack(CImPduRawDataDecoder());
-//    pipeline->addBack(StatisticsConnHandler());
+    pipeline->addBack(SimpleDecode());
 
     pipeline->addBack(ConnHandler(service_));
     pipeline->finalize();

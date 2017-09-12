@@ -104,7 +104,7 @@ class ServiceBaseFactory : public FactoryObject<ServiceBase> {
 public:
     explicit ServiceBaseFactory(const std::string& name)
         : name_(name) {}
-    
+
     virtual ~ServiceBaseFactory() = default;
     
     // service_name: 配置文件制定，比如gateway_server
@@ -117,6 +117,24 @@ public:
 protected:
     std::shared_ptr<ServiceBase> CreateInstance() const override {
         return nullptr;
+    }
+
+    std::string name_;
+};
+
+//////////////////////////////////////////////////////////////////////////////
+class ServiceBaseFactoryT {
+public:
+    ServiceBaseFactoryT() {}
+
+    ServiceBaseFactoryT(const std::string& name)
+            : name_(name) {}
+
+    virtual ~ServiceBaseFactoryT() = default;
+
+    // service_name: 配置文件制定，比如gateway_server
+    virtual const std::string& GetName() const {
+        return name_;
     }
 
     std::string name_;

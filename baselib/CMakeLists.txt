@@ -41,6 +41,7 @@ set (BASELIB_SRC_LIST
         net/server/tcp_client_group.h
         net/server/tcp_server.cc
         net/server/tcp_server.h
+        net/server/tcp_server_t.h
         net/server/tcp_service_base.cc
         net/server/tcp_service_base.h
         net/server/udp_client.cc
@@ -64,6 +65,7 @@ set (BASELIB_SRC_LIST
         net/thread_local_conn_manager.h
         net/conn_pipeline_factory.cc
         net/conn_pipeline_factory.h
+        net/conn_pipeline_factory_t.h
         net/conn_handler.cc
         net/conn_handler.h
         )

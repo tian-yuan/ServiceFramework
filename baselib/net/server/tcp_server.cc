@@ -61,7 +61,7 @@ const std::string& TcpServerFactory::GetType() const {
     return g_tcp_server_service_name;
 }
 
-std::shared_ptr<ServiceBase> TcpServerFactory::CreateInstance(const ServiceConfig& config) const {
+std::shared_ptr<ServiceBase> TcpServerFactory::CreateInstance(const ServiceConfig &config) const {
     LOG(INFO) << "CreateInstance - " << config.ToString();
 
     auto tcp_server = std::make_shared<TcpServer>(config, io_group_);
