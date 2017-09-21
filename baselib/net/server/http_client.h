@@ -28,7 +28,14 @@ struct HttpClientReplyData {
         other.body = std::move(body);
     }
     
-    std::string ToString() const;
+    std::string ToString() const {
+        std::ostringstream oss;
+        oss << "result: " << result;
+        if (body) {
+            oss << body->clone()->moveToFbString();
+        }
+        return oss.str();
+    }
 };
 
 typedef std::function<void(HttpClientReplyData&)> HttpClientReplyCallback;

@@ -24,8 +24,7 @@ using namespace proxygen;
 #define kDefaultConnectTimeout 1000
 
 namespace {
-    
-    
+
 static __thread char g_resolve_buffer[64 * 1024];
 
 static std::string S_GetHostByName(const std::string& hostname) {
@@ -46,7 +45,6 @@ static std::string S_GetHostByName(const std::string& hostname) {
     if (ret == 0 && he != NULL && he->h_addr) {
         char host_ip[32] = {0};
         sin_addr = *reinterpret_cast<struct in_addr*>(he->h_addr);
-        // *(struct in_addr*) he->h_addr_list[0];
         inet_ntop(AF_INET, &sin_addr, host_ip, sizeof(host_ip));
         ip = host_ip;
     } else {
@@ -56,15 +54,6 @@ static std::string S_GetHostByName(const std::string& hostname) {
     return ip;
 }
 
-}
-
-std::string HttpClientReplyData::ToString() const {
-    std::ostringstream oss;
-    oss << "result: " << result;
-    if (body) {
-        oss << body->clone()->moveToFbString();
-    }
-    return oss.str();
 }
 
 class HttpClient : public RabbitHttpClientCallback {
@@ -92,17 +81,12 @@ public:
                const std::string& headers,
                const std::string& post_data);
 
-//    void Get(const std::string& url);
-//    void Post(const std::string& url, const std::string& post_data);
-    
     // 引用计数
     void AddRef() {
         ++ref_count_;
     }
     
     void ReleaseRef() {
-        // LOG(INFO) << "ReleaseRef - ref_count: " << ref_count_;
-        
         if (ref_count_ <= 0) {
             LOG(ERROR) << "HttpClient - ReleaseRef error, ref_count_: " << ref_count_;
         } else {
@@ -197,14 +181,12 @@ void HttpClient::Fetch(proxygen::HTTPMethod method,
         }
 
     }
-    
-    
-    // copyBuffer();
+
     std::unique_ptr<folly::IOBuf> post_data2;
     if (method == proxygen::HTTPMethod::POST && !post_data.empty()) {
         post_data2 = std::move(folly::IOBuf::copyBuffer(post_data));
     }
-    // folly::IOBuf::
+
     http_client_ = folly::make_unique<RabbitHttpClient>(evb_,
                                                       method,
                                                       url2,
@@ -256,12 +238,13 @@ void HttpClient::OnConnectError(const folly::AsyncSocketException& ex) {
 }
 
 void HttpClient::OnError(const proxygen::HTTPException& error) {
+    LOG(ERROR) << "http client on error, " << error.what();
     reply_.result = HttpReplyCode::HTTP_ERROR;
-    
+
 //    if (cb_) {
 //        cb_(reply_);
 //    }
-//    
+//
 //    ReleaseRef();
 }
 
@@ -301,7 +284,7 @@ void HttpClientPost(folly::EventBase* evb,
                     HttpClientReplyCallback cb) {
     auto http_client = HttpClient::CreateHttpClient(evb, cb);
     http_client->AddRef();
-    http_client->Fetch(proxygen::HTTPMethod::GET, url, headers, post_data);
+    http_client->Fetch(proxygen::HTTPMethod::POST, url, headers, post_data);
     http_client->ReleaseRef();
 }
 
@@ -320,7 +303,6 @@ std::shared_ptr<HttpClientReplyData> HttpClientSyncFetch(folly::EventBase* evb,
     auto fiber_data = fiber_data_manger->AllocFiberData();
     if (fiber_data) {
         // 有可能已经超时，需要使用weak_ptr来检查是否已经被释放
-        // TODO(@benqi): CreateHttpClient使用std::shared_ptr<HttpClientReplyData>
         std::weak_ptr<HttpClientReplyData> r1(reply_data);
         std::weak_ptr<FiberDataInfo> f1(fiber_data);
         auto http_client = HttpClient::CreateHttpClient(evb, [r1, f1, url] (HttpClientReplyData& reply) {
@@ -346,18 +328,10 @@ std::shared_ptr<HttpClientReplyData> HttpClientSyncFetch(folly::EventBase* evb,
             
             fiber_data->Wait(FIBER_HTTP_TIMEOUT);
             if (fiber_data->state == FiberDataInfo::kTimeout) {
-                // TODO(@benqi):
                 // 添加调用链追踪
                 LOG(ERROR) << "HttpClientSyncFetch - fiber wait timeout:  "
                             <<  fiber_data->ToString() << ", url: " << url;
             }
-            // bool r = fiber_data->baton.timed_wait((std::chrono::seconds(FIBER_HTTP_TIMEOUT)));
-            // if (r) {
-            //     // LOG(INFO) << "";
-            // } else {
-            //    LOG(ERROR) << "HttpClientSyncFetch - fiber wait timeout:  "
-            //                <<  fiber_data->ToString() << ", url: " << url;
-            // }
         }
         fiber_data_manger->DeleteFiberData(fiber_data);
         http_client->ReleaseRef();

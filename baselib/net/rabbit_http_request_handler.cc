@@ -1,5 +1,6 @@
 #include "net/rabbit_http_request_handler.h"
 #include "net/fiber_data_manager.h"
+#include "net/rabbit_http_handler.h"
 
 #include <proxygen/httpserver/ResponseBuilder.h>
 
@@ -82,6 +83,6 @@ void RabbitHttpRequestHandler::onEOM() noexcept {
 void RabbitHttpRequestHandler::OnHttpHandler(const proxygen::HTTPMessage& headers,
                                            std::unique_ptr<folly::IOBuf> body,
                                            proxygen::ResponseBuilder& r) {
-//    RabbitHttpRequestHandler::DispatchMoguHttpHandler(headers, std::move(body), r);
+    RabbitHttpHandlerFactory::DispatchRabbitHttpHandler(headers, std::move(body), r);
 
 }

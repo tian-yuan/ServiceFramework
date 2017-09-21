@@ -55,6 +55,8 @@ set (BASELIB_SRC_LIST
         net/fiber_data_manager.h
         net/io_thread_pool_manager.cc
         net/io_thread_pool_manager.h
+        net/rabbit_http_handler.cc
+        net/rabbit_http_handler.h
         net/rabbit_http_request_handler.cc
         net/rabbit_http_request_handler.h
         net/simple_conn_handler.cc

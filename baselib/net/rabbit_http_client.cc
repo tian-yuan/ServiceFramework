@@ -10,14 +10,9 @@
 
 #include "net/rabbit_http_client.h"
 
-#include <errno.h>
-#include <sys/stat.h>
-
 #include <fstream>
 
 #include <folly/FileUtil.h>
-#include <folly/String.h>
-#include <proxygen/lib/http/HTTPMessage.h>
 #include <proxygen/lib/http/session/HTTPUpstreamSession.h>
 
 using namespace folly;

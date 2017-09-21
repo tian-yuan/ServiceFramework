@@ -8,7 +8,13 @@ set (CONFIG_HTTP_TEST_LIST
         http_client_test.cc
 )
 
+set (CONFIG_HTTP_SERVER_TEST_LIST
+        http_server_test.cc
+        )
+
 add_executable (http_client_test ${CONFIG_HTTP_TEST_LIST})
 add_executable (io_thread_pool_manager_test ${CONFIG_TEST_LIST})
+add_executable(http_server_test ${CONFIG_HTTP_SERVER_TEST_LIST})
 target_link_libraries (http_client_test baselib gflags wangle folly proxygenlib glog crypto ssl)
 target_link_libraries (io_thread_pool_manager_test baselib gflags wangle folly glog crypto ssl)
+target_link_libraries (http_server_test baselib gflags folly proxygenhttpserver glog crypto ssl)
