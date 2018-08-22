@@ -1,0 +1,9 @@
+[requires]
+wangle/v2017.07.18.01@mac/stable
+proxygen/v2017.07.28.01@mac/stable
+folly/v2017.07.21.01@mac/stable
+openssl_64/1.0.2l@mac/stable
+boost/v2018.08.22.01@mac/stable
+
+[generators]
+cmake
