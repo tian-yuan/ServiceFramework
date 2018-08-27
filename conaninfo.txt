@@ -1,0 +1,41 @@
+[settings]
+    arch=x86_64
+    build_type=Release
+    compiler=apple-clang
+    compiler.libcxx=libc++
+    compiler.version=9.0
+    os=Macos
+
+[requires]
+    boost/v2018.08.22.01
+    folly/v2017.07.21.01
+    openssl_64/1.Y.Z
+    proxygen/v2017.07.28.01
+    wangle/v2017.07.18.01
+
+[options]
+
+
+[full_settings]
+    arch=x86_64
+    build_type=Release
+    compiler=apple-clang
+    compiler.libcxx=libc++
+    compiler.version=9.0
+    os=Macos
+
+[full_requires]
+    boost/v2018.08.22.01@mac/stable:7fe67dff831b24bc4a8b5db678a51f1be5e44e7c
+    folly/v2017.07.21.01@mac/stable:7fe67dff831b24bc4a8b5db678a51f1be5e44e7c
+    openssl_64/1.0.2l@mac/stable:7fe67dff831b24bc4a8b5db678a51f1be5e44e7c
+    proxygen/v2017.07.28.01@mac/stable:7fe67dff831b24bc4a8b5db678a51f1be5e44e7c
+    wangle/v2017.07.18.01@mac/stable:7fe67dff831b24bc4a8b5db678a51f1be5e44e7c
+
+[full_options]
+    boost:shared=False
+
+[recipe_hash]
+
+
+[env]
+

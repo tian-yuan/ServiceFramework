@@ -12,7 +12,7 @@ struct LogInitializer : public Configurable {
     static void Initialize(const char* argv0);
     
     // 配置改变
-    bool SetConf(const std::string& conf_name, const Configuration& conf) override;
+    bool SetConf(const std::string& conf_name, const nlohmann::json& conf) override;
     
 private:
 };

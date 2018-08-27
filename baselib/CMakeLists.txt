@@ -4,11 +4,16 @@ set (BASELIB_SRC_LIST
 
         base/config/rendezvous_hash.cc
         base/config/rendezvous_hash.h
-        base/config_util.cc
-        base/config_util.h
+
         base/configurable.h
         base/configuration.cc
         base/configuration.h
+        base/config_manager.cc
+        base/config_manager.h
+        base/base_main.cc
+        base/base_main.h
+        base/config_util.cc
+        base/config_util.h
 
         base/glog_util.cc
         base/glog_util.h
@@ -70,6 +75,8 @@ set (BASELIB_SRC_LIST
         net/conn_pipeline_factory_t.h
         net/conn_handler.cc
         net/conn_handler.h
+
+        thirdparty/nlohmann/json.hpp
         )
 
 add_library (baselib ${BASELIB_SRC_LIST})

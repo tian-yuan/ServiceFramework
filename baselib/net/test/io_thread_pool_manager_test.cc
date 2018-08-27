@@ -48,11 +48,10 @@ int main() {
     std::shared_ptr<IOThreadPoolConnManager> conns_;
     conns_ = std::make_shared<IOThreadPoolConnManager>(GetIOThreadSize());
 
-    folly::StringPiece configString = "{\"service_name\":\"tcp_server\", \"service_type\":\"tcp_server\", \"hosts\":\"0.0.0.0\", \"port\":18889, \"max_conn_cnt\":2}";
-    folly::dynamic dynamicConfig = parseJsonString(configString);
-    Configuration configuration(dynamicConfig);
+    std::string configString = "{\"service_name\":\"tcp_server\", \"service_type\":\"tcp_server\", \"hosts\":\"0.0.0.0\", \"port\":18889, \"max_conn_cnt\":2}";
+    nlohmann::json configJson = nlohmann::json::parse(configString);
     ServiceConfig config;
-    config.SetConf("test_tcp_server", configuration);
+    config.SetConf("test_tcp_server", configJson);
 
     std::shared_ptr<DefaultIOThreadPoolExecutor> threadPool = std::make_shared<DefaultIOThreadPoolExecutor>();
 

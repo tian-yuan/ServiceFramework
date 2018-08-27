@@ -59,6 +59,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/baselib)
 include_directories(${PROJECT_SOURCE_DIR}/baselib/)
+include_directories(${PROJECT_SOURCE_DIR}/baselib/thirdparty/)
 
 ### for other libs
 link_directories(/usr/local/ssl/lib /usr/local/lib)
@@ -72,3 +73,4 @@ set(CMAKE_EXE_LINKER_FLAGS "-lpthread -lrt -ldl")
 endif()
 
 add_subdirectory(baselib)
+add_subdirectory(server)

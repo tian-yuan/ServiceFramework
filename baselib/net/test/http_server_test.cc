@@ -61,12 +61,11 @@ int main() {
     std::shared_ptr<HttpServerFactory> serverFactory = HttpServerFactory::CreateFactory(
             "http_server", conns_->GetIOThreadPoolExecutor());
 
-    folly::StringPiece configString = "{\"service_name\":\"http_server\", \"service_type\":\"http_server\", "
+    std::string configString = "{\"service_name\":\"http_server\", \"service_type\":\"http_server\", "
             "\"hosts\":\"0.0.0.0\", \"port\":18889, \"max_conn_cnt\":2}";
-    folly::dynamic dynamicConfig = parseJsonString(configString);
-    Configuration configuration(dynamicConfig);
+    nlohmann::json configJson = nlohmann::json::parse(configString);
     ServiceConfig config;
-    config.SetConf("http_server", configuration);
+    config.SetConf("http_server", configJson);
 
     std::shared_ptr<ServiceBase> httpServer = serverFactory->CreateInstance(config);
     httpServer->Start();

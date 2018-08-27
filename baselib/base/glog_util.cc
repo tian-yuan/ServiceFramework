@@ -52,89 +52,74 @@ void LogInitializer::Initialize(const char* argv0) {
  */
 
 #define SET_TRACE_FLAG(trace_flag) \
-    v = config_data.get_ptr(#trace_flag); \
-    if (v && v->isBool()) { \
-        glog_util::GLOG_##trace_flag = v->asBool(); \
+    if (config_data.find(#trace_flag) != config_data.end()) { \
+        glog_util::GLOG_##trace_flag = config_data[#trace_flag].get<bool>(); \
     }
 
-bool LogInitializer::SetConf(const std::string& conf_name, const Configuration& conf) {
+bool LogInitializer::SetConf(const std::string& conf_name, const nlohmann::json& config_data) {
     folly::fbstring program_name = google::ProgramInvocationShortName() ? google::ProgramInvocationShortName() : "";
     folly::fbstring logger_name;
-    
-    folly::dynamic config_data = conf.GetDynamicConf();
-    if (!config_data.isObject()) {
-        return false;
-    }
+
     // 设置 google::FATAL 级别的日志存储路径和文件名前缀
-    auto fatal_dest = config_data.get_ptr("fatal_dest");
-    if (fatal_dest && fatal_dest->isString()) {
-        logger_name = fatal_dest->asString() + program_name.toStdString() + "_fatal_";
+    if (config_data.find("fatal_dest") != config_data.end()) {
+        logger_name = config_data["fatal_dest"].get<std::string>() + program_name.toStdString() + "_fatal_";
         // std::cout << logger_name << std::endl;
         google::SetLogDestination(google::INFO, logger_name.c_str());
     }
     
     // 设置 google::ERROR 级别的日志存储路径和文件名前缀
-    auto error_dest = config_data.get_ptr("error_dest");
-    if (error_dest && error_dest->isString()) {
-        logger_name = error_dest->asString() + program_name.toStdString() + "_error_";
+    if (config_data.find("error_dest") != config_data.end()) {
+        logger_name = config_data["error_dest"].get<std::string>() + program_name.toStdString() + "_error_";
         // std::cout << logger_name << std::endl;
         google::SetLogDestination(google::ERROR, logger_name.c_str());
     }
     
     // 设置 google::WARNING 级别的日志存储路径和文件名前缀
-    auto warning_dest = config_data.get_ptr("warning_dest");
-    if (warning_dest && warning_dest->isString()) {
-        logger_name = warning_dest->asString() + program_name.toStdString() + "_warning_";
+    if (config_data.find("warning_dest") != config_data.end()) {
+        logger_name = config_data["warning_dest"].get<std::string>() + program_name.toStdString() + "_warning_";
         // std::cout << logger_name << std::endl;
         google::SetLogDestination(google::WARNING, logger_name.c_str());
     }
     
     // 设置 google::INFO 级别的日志存储路径和文件名前缀
-    auto info_dest = config_data.get_ptr("info_dest");
-    if (info_dest && info_dest->isString()) {
-        logger_name = info_dest->asString() + program_name.toStdString() + "_info_";
+    if (config_data.find("info_dest") != config_data.end()) {
+        logger_name = config_data["info_dest"].get<std::string>() + program_name.toStdString() + "_info_";
         // std::cout << logger_name << std::endl;
         google::SetLogDestination(google::INFO, logger_name.c_str());
     }
     
-    auto logbufsecs = config_data.get_ptr("logbufsecs");
-    if (logbufsecs && logbufsecs->isInt()) {
-        FLAGS_logbufsecs = static_cast<int32_t>(logbufsecs->asInt());
+    if (config_data.find("logbufsecs") != config_data.end()) {
+        FLAGS_logbufsecs = static_cast<int32_t>(config_data["logbufsecs"].get<int>());
     } else {
         FLAGS_logbufsecs = 10;
     }
     
-    auto logbuflevel = config_data.get_ptr("logbuflevel");
-    if (logbuflevel && logbuflevel->isInt()) {
-        FLAGS_logbuflevel = static_cast<int32_t>(logbuflevel->asInt());
+    if (config_data.find("logbuflevel") != config_data.end()) {
+        FLAGS_logbuflevel = static_cast<int32_t>(config_data["logbuflevel"].get<int>());
     } else {
         FLAGS_logbuflevel = 4;
     }
     
-    auto max_log_size = config_data.get_ptr("max_log_size");
-    if (max_log_size && max_log_size->isInt()) {
-        FLAGS_max_log_size = static_cast<int32_t>(max_log_size->asInt());
+    if (config_data.find("max_log_size") != config_data.end()) {
+        FLAGS_max_log_size = static_cast<int32_t>(config_data["max_log_size"].get<int>());
     } else {
         FLAGS_max_log_size = 1000;
     }
     
     ///打印级别小于FLAGS_minloglevel的都不会输出到日志文件
-    auto minloglevel = config_data.get_ptr("minloglevel");
-    if (minloglevel && minloglevel->isInt()) {
-        FLAGS_minloglevel = static_cast<int32_t>(minloglevel->asInt());
+    if (config_data.find("minloglevel") != config_data.end()) {
+        FLAGS_minloglevel = static_cast<int32_t>(config_data["minloglevel"].get<int>());
     } else {
         FLAGS_minloglevel = 0;
     }
     
-    auto stop_logging_if_full_disk = config_data.get_ptr("stop_logging_if_full_disk");
-    if (stop_logging_if_full_disk && stop_logging_if_full_disk->isBool()) {
-        FLAGS_stop_logging_if_full_disk = stop_logging_if_full_disk->asBool();
+    if (config_data.find("stop_logging_if_full_disk") != config_data.end()) {
+        FLAGS_stop_logging_if_full_disk = config_data["stop_logging_if_full_disk"].get<bool>();
     } else {
         FLAGS_stop_logging_if_full_disk = true;
     }
     
-    auto v = config_data.get_ptr("enable_folly_debug");
-    if (v && v->isBool() && v->asBool()) {
+    if (config_data.find("enable_folly_debug") != config_data.end() && config_data["enable_folly_debug"].get<bool>()) {
         FLAGS_v = 20;
     }
 
@@ -144,6 +129,6 @@ bool LogInitializer::SetConf(const std::string& conf_name, const Configuration& 
     SET_TRACE_FLAG(trace_http);
     SET_TRACE_FLAG(trace_message_handler);
     SET_TRACE_FLAG(trace_cost);
-    
+
     return true;
 }

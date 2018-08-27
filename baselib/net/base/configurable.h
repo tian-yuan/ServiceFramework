@@ -2,7 +2,8 @@
 #define BASE_CONFIGURABLE_H_
 
 #include <folly/dynamic.h>
-#include "nlohmann/json.hpp"
+
+class Configuration;
 
 // 动态配置框架
 struct Configurable {
@@ -10,12 +11,12 @@ public:
     virtual ~Configurable() = default;
     
     // 由Conf生成
-    virtual bool SetConf(const nlohmann::json& conf) {
+    virtual bool SetConf(const Configuration& conf) {
         return true;
     }
 
     // 由Conf生成
-    virtual bool SetConf(const std::string& conf_name, const nlohmann::json& conf) {
+    virtual bool SetConf(const std::string& conf_name, const Configuration& conf) {
         return true;
     }
 };

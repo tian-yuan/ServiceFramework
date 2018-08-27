@@ -7,20 +7,22 @@
 
 #include "base/configuration.h"
 
-bool ServiceConfig::SetConf(const std::string& conf_name, const Configuration& conf) {
-    folly::dynamic v = nullptr;
-    
-    v = conf.GetValue("service_name");
-    if (v.isString()) service_name = v.asString();
-    v = conf.GetValue("service_type");
-    if (v.isString()) service_type = v.asString();
-    v = conf.GetValue("hosts");
-    if (v.isString()) hosts = v.asString();
-    v = conf.GetValue("port");
-    if (v.isInt()) port = static_cast<uint32_t>(v.asInt());
-    v = conf.GetValue("max_conn_cnt");
-    if (v.isInt()) max_conn_cnt = static_cast<uint32_t>(v.asInt());
-    
+bool ServiceConfig::SetConf(const std::string& conf_name, const nlohmann::json& conf) {
+    if (conf.find("service_name") != conf.end()) {
+        service_name = conf["service_name"].get<std::string>();
+    }
+    if (conf.find("service_type") != conf.end()) {
+        service_name = conf["service_type"].get<std::string>();
+    }
+    if (conf.find("hosts") != conf.end()) {
+        hosts = conf["hosts"].get<std::string>();
+    }
+    if (conf.find("port") != conf.end()) {
+        port = conf["port"].get<int>();
+    }
+    if (conf.find("max_conn_cnt") != conf.end()) {
+        max_conn_cnt = conf["max_conn_cnt"].get<int>();
+    }
     return true;
 }
 
@@ -44,25 +46,17 @@ std::string ServiceConfig::ToString() const {
 }
 
 // services
-std::vector<std::shared_ptr<ServiceConfig>> ToServiceConfigs(const Configuration& conf) {
+std::vector<std::shared_ptr<ServiceConfig>> ToServiceConfigs(const nlohmann::json& conf) {
     std::vector<std::shared_ptr<ServiceConfig>> v;
 
-    for (auto& v2 : conf.GetDynamicConf()) {
-            auto config_info = std::make_shared<ServiceConfig>();
-            Configuration config(v2);
-            config_info->SetConf("", config);
-            v.push_back(config_info);
-    }
-    
     return v;
 }
 
 
-bool SystemConfig::SetConf(const std::string& conf_name, const Configuration& conf) {
-    folly::dynamic v = nullptr;
-    
-    v = conf.GetValue("io_thread_pool_size");
-    if (v.isInt()) io_thread_pool_size = static_cast<uint32_t>(v.asInt());
-
+bool SystemConfig::SetConf(const std::string& conf_name, const nlohmann::json& conf) {
+    if (conf.find("io_thread_pool_size") != conf.end()) {
+        io_thread_pool_size = conf["io_thread_pool_size"].get<int>();
+    }
     return true;
 }
+
