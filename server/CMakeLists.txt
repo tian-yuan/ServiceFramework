@@ -1,2 +1,2 @@
-#add_subdirectory(iot-hub)
+add_subdirectory(IotHubServer)
 

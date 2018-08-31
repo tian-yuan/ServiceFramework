@@ -1,8 +1,7 @@
 #ifndef BASE_CONFIGURABLE_H_
 #define BASE_CONFIGURABLE_H_
 
-#include <folly/dynamic.h>
-#include "nlohmann/json.hpp"
+#include "thirdparty/nlohmann/json.hpp"
 
 // 动态配置框架
 struct Configurable {

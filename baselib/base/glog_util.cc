@@ -2,11 +2,7 @@
 
 #include <iostream>
 
-#include <glog/logging.h>
-#include <gflags/gflags.h>
-
 #include <folly/Singleton.h>
-#include <folly/FBString.h>
 
 #include "base/configuration.h"
 
@@ -30,6 +26,7 @@ std::shared_ptr<LogInitializer> GetLogInitializerSingleton() {
 }
 
 void LogInitializer::Initialize(const char* argv0) {
+    LOG(INFO) << "log initialize.";
     // google::InitGoogleLogging(argv0);
     // google::InstallFailureSignalHandler();
     google::SetStderrLogging(google::FATAL);

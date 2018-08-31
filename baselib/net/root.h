@@ -9,6 +9,7 @@
 
 #include "net/base/service_base.h"
 #include "net/thread_group_list_manager.h"
+#include "io_thread_pool_manager.h"
 
 // 两种情况
 // 刚启动时加载配置文件
@@ -29,10 +30,7 @@ protected:
         io_thread_pool_size_ = v;
     }
     
-    // 必须初始化以后才能调用
     void RegisterService(const std::string& name, const std::string& type) {
-        // TODO(@benqi):
-        // 检查是否已经加入
         services_.push_back(std::make_pair(name, type));
     }
     
@@ -40,7 +38,7 @@ protected:
     virtual bool Initialize();
     bool Run() override;
     bool Destroy() override;
-    
+
     // 为0默认多线程模式
     size_t io_thread_pool_size_{0};
     

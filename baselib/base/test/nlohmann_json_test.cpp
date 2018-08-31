@@ -24,5 +24,11 @@ int main() {
     for (nlohmann::json::iterator it = configJson.begin(); it != configJson.end(); ++it) {
         std::cout << it.key() << " : " << it.value() << "\n";
     }
+    configJson = nlohmann::json::parse("{\"service\": [{\"name\": \"bobo\"}, {\"name\": \"tidy\"}]}");
+    std::cout << configJson["service"].size() << std::endl;
+    std::cout << configJson["service"].at(0) << std::endl;
+    for (nlohmann::json item : configJson["service"]) {
+        std::cout << item << std::endl;
+    }
     return 0;
 }

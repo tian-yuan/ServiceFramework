@@ -1,4 +1,6 @@
 set (BASELIB_SRC_LIST
+        thirdparty/nlohmann/json.hpp
+
         base/snowflake_id_util.cc
         base/snowflake_id_util.h
 
@@ -19,6 +21,8 @@ set (BASELIB_SRC_LIST
         base/glog_util.h
         base/time_util.cc
         base/time_util.h
+        base/util.cc
+        base/util.h
 
         message_util/call_chain_util.cc
         message_util/call_chain_util.h
@@ -75,8 +79,18 @@ set (BASELIB_SRC_LIST
         net/conn_pipeline_factory_t.h
         net/conn_handler.cc
         net/conn_handler.h
+        net/thread_group_list_manager.cc
+        net/thread_group_list_manager.h
+        net/service_manager.cc
+        net/service_manager.h
 
-        thirdparty/nlohmann/json.hpp
+        net/service_manager.cc
+        net/service_manager.h
+        net/service_router_manager.cc
+        net/service_router_manager.h
+
+        net/root.h
+        net/root.cc
         )
 
 add_library (baselib ${BASELIB_SRC_LIST})

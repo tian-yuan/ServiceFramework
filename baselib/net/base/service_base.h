@@ -60,9 +60,9 @@ enum class ServiceModuleType : int {
     HTTP_SERVER = 7,
     MAX_SIZE = 8
 };
-    
+
 class ServiceRouterManager;
-    
+
 // 服务基础类
 // 注意：
 //   一个ServiceBase并不和一个ServiceType对应

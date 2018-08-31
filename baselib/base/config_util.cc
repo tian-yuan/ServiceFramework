@@ -12,7 +12,7 @@ bool ServiceConfig::SetConf(const std::string& conf_name, const nlohmann::json& 
         service_name = conf["service_name"].get<std::string>();
     }
     if (conf.find("service_type") != conf.end()) {
-        service_name = conf["service_type"].get<std::string>();
+        service_type = conf["service_type"].get<std::string>();
     }
     if (conf.find("hosts") != conf.end()) {
         hosts = conf["hosts"].get<std::string>();
@@ -48,7 +48,11 @@ std::string ServiceConfig::ToString() const {
 // services
 std::vector<std::shared_ptr<ServiceConfig>> ToServiceConfigs(const nlohmann::json& conf) {
     std::vector<std::shared_ptr<ServiceConfig>> v;
-
+    for (auto item : conf) {
+        auto configInfo = std::make_shared<ServiceConfig>();
+        configInfo->SetConf("", item);
+        v.push_back(configInfo);
+    }
     return v;
 }
 

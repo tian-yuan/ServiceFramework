@@ -1,33 +1,14 @@
-/*
- *  Copyright (c) 2015, mogujie.com
- *  All rights reserved.
- *
- *  Created by benqi@mogujie.com on 2015-12-20.
- *
- */
-
 #include "base/base_main.h"
 
-#include <signal.h>
-
-#include <gflags/gflags.h>
-#include <glog/logging.h>
-
-#include <folly/Singleton.h>
-
 #include "base/glog_util.h"
-#include "base/config_manager.h"
-// #include "base/util.h"
 
 #include "util.h"
-// #include <folly/experimental/symbolizer/SignalHandler.h>
 
-// DEFINE_string(xml, "", "im_test_server port");
 DEFINE_string(json, "", "json config file");
 DEFINE_string(pid_path, "", "pid_file create path");
 
-#ifndef IM_SERVER_VERSION
-#define IM_SERVER_VERSION "4.0.1"
+#ifndef SERVER_VERSION
+#define SERVER_VERSION "4.0.1"
 #endif
 
 void FollyInitializer(int* argc, char*** argv, bool removeFlags = true) {
@@ -57,6 +38,7 @@ static std::string g_app_instance_name;
 namespace base {
 
 BaseMain::BaseMain() {
+    LOG(INFO) << "base main construct.";
     config_manager_ = ConfigManager::GetInstance();
     
     // 注册logger配置
@@ -65,11 +47,14 @@ BaseMain::BaseMain() {
 
 bool BaseMain::DoMain(int argc, char* argv[]) {
     signal(SIGPIPE, SIG_IGN);
-    
+
+    LOG(INFO) << "base main .";
     google::ParseCommandLineFlags(&argc, &argv, true);
-    google::SetVersionString(IM_SERVER_VERSION);
+    LOG(INFO) << "parse command line flags.";
+    google::SetVersionString(SERVER_VERSION);
 
     g_app_instance_name = google::ProgramInvocationShortName() ? google::ProgramInvocationShortName() : "";
+    LOG(INFO) << "app instance name : " << g_app_instance_name;
 
     // folly
     FollyInitializer(&argc, &argv);
@@ -86,25 +71,6 @@ bool BaseMain::DoMain(int argc, char* argv[]) {
     
     pid_file_path_ = FLAGS_pid_path;
 
-    //
-    // google::VersionString();
-    
-    
-//    google::ParseCommandLineFlags(&argc, &argv, true);
-//    
-//    // google::InitGoogleLogging(argv[0]);
-//    google::InstallFailureSignalHandler();
-    
-//    google::SetLogDestination(google::INFO, "./log/");
-//    google::InitGoogleLogging (argv[0]);
-//    google::SetLogDestination(google::INFO, "./log/");
-//    google::SetStderrLogging(google::FATAL);
-//    FLAGS_stderrthreshold = google::INFO;
-//    FLAGS_colorlogtostderr = true;
-//    FLAGS_v = 20;
-    
-    // LOG(INFO) << "EventBase(): Starting loop.";
-    
     LOG(INFO) << "DoMain - Ready DoMain()...";
     
     bool ret = false;
@@ -119,16 +85,12 @@ bool BaseMain::DoMain(int argc, char* argv[]) {
             break;
         }
 
-        // writePid(google::ProgramInvocationShortName());
-        
         Run();
         Destroy();
         ret = true;
     } while (0);
     
     exit(0);
-    
-    return ret;
 }
 
 bool BaseMain::LoadConfig(const std::string& config_path) {
@@ -143,7 +105,7 @@ bool BaseMain::LoadConfig(const std::string& config_path) {
 
 bool BaseMain::Initialize() {
     LOG(INFO) << "Initialize - Initialize...";
-    // conn_pool_ = std::make_shared<IOThreadPoolConnManager>(GetIOThreadSize());
+//    conn_pool_ = std::make_shared<IOThreadPoolConnManager>(GetIOThreadSize());
 
     return true;
 }

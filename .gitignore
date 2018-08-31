@@ -2,6 +2,7 @@
 *.log
 */node-log.log
 logs/*
+log/*
 !/logs/.gitkeep
 !.gitignore
 */node_modules/*
@@ -26,3 +27,4 @@ Makefile
 *.cmake
 **/bin/*
 **/lib/*
+*.pid

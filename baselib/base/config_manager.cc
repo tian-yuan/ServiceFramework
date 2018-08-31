@@ -8,7 +8,6 @@
 ConfigManager* ConfigManager::GetInstance() {
     static ConfigManager g_config_manager;
     return &g_config_manager;
-    // return folly::Singleton<ConfigManager>::try_get();
 }
 
 void ConfigManager::Register(const folly::fbstring item_name, Configurable* item, bool recv_updated) {
@@ -33,7 +32,7 @@ void ConfigManager::UnRegister(const folly::fbstring& item_name) {
 bool ConfigManager::Initialize(ConfigType configType, const std::string param) {
     LOG(INFO) << "Initialize - initialize param: " << param;
     
-    if (!param.empty()) {
+    if (param.empty()) {
         LOG(ERROR) << "Initialize - param is empty.";
         return false;
     }
@@ -60,12 +59,14 @@ bool ConfigManager::OnConfigUpdated() {
 bool ConfigManager::OnConfigDataUpdated(const folly::fbstring& config_data, bool is_first) {
     nlohmann::json config_json = nlohmann::json::parse(config_data.toStdString());
     ConfigItemMap::iterator it = config_items_.begin();
-    if (it != config_items_.end()) {
+    while (it != config_items_.end()) {
         folly::fbstring item_key = it->first;
+        LOG(INFO) << "config item key : " << item_key;
         if (config_json.find(item_key) != config_json.end()) {
             Configurable* configurable = it->second;
             nlohmann::json::iterator iter = config_json.find(item_key);
             nlohmann::json item_value = iter.value();
+            LOG(INFO) << "config : " << item_value;
             configurable->SetConf(item_key.toStdString(), item_value);
         }
         it++;

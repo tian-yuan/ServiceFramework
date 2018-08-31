@@ -20,9 +20,7 @@ public :
     
 private:
     friend class folly::Singleton<ServiceFactoryManager>;
-    
-    ServiceFactoryManager() = default;
-    
+
     std::vector<std::shared_ptr<ServiceBaseFactory>> factories_;
 };
 

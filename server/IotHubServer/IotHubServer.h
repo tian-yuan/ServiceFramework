@@ -8,16 +8,14 @@
 #include "net/root.h"
 
 class IotHubServer : public Root {
-    public:
-    AccessServer();
-    virtual ~AccessServer() = default;
+public:
+    IotHubServer();
+
+    virtual ~IotHubServer() = default;
 
     bool Initialize() override;
 
     void OnTimer(int timer_id) override;
-
-    protected:
-    //
 };
 
 

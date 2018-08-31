@@ -1,18 +1,12 @@
 #include "net/root.h"
 
-#include <signal.h>
-#include <gflags/gflags.h>
-
 #include "base/util.h"
-#include "base/config_manager.h"
-#include "base/gperftools_profiler.h"
 
 #include "net/server/tcp_client.h"
 #include "net/server/tcp_server.h"
 
 #include "net/service_manager.h"
-
-#include "message_util/message_handler.h"
+#include "net/service_router_manager.h"
 
 #define SIGNAL_AND_QUIT
 
@@ -72,8 +66,7 @@ bool Root::Initialize() {
     }
     
     FiberDataManager::InitFiberStats();
-    base::MonitorManager::InitMonitorStats();
-    
+
     return true;
 }
 
@@ -115,11 +108,7 @@ bool Root::Run() {
         Root::DoTimer(main_eb, this);
     }, 1000);
     
-    GPerftoolsProfiler profiler;
-    profiler.ProfilerStart();
     main_eb->loopForever();
-    profiler.ProfilerStop();
-
     service_manager->Stop();
     return true;
 }
